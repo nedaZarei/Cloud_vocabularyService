@@ -7,7 +7,6 @@ redis:
   cachetime: 3600
 
 ninjas:
-  definitionurl: https://api-ninjas.com/api/dictionary
-  defAPIKey: 123456789
-  wordgeneratorurl: https://api-ninjas.com/api/randomword
-  randwordAPIKey: 987654321
+  definitionurl: https://api.api-ninjas.com/v1/dictionary
+  defAPIKey: P9nis6bPQQRNLyrFK/yPaw==VJczzEp4moLZHGrk
+  wordgeneratorurl: https://api.api-ninjas.com/v1/randomword

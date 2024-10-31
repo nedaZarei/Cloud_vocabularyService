@@ -15,14 +15,13 @@ type Server struct {
 type Redis struct {
 	Host      string `yaml:"host"`
 	Port      string `yaml:"port"`
-	CacheTime int    `yaml:"cache_time"`
+	CacheTime int    `yaml:"cachetime"`
 }
 
 type Ninjas struct {
-	DefinitionURL    string `yaml:"definition_url"`
-	DefAPIKey        string `yaml:"def_api_key"`
-	WordGeneratorURL string `yaml:"word_generator_url"`
-	RandWordAPIKey   string `yaml:"rand_word_api_key"`
+	DefinitionURL    string `yaml:"definitionurl"`
+	DefAPIKey        string `yaml:"defapikey"`
+	WordGeneratorURL string `yaml:"wordgeneratorurl"`
 }
 
 func InitConfig(filename string) (*Config, error) {
