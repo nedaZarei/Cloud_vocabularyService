@@ -1,0 +1,13 @@
+server:
+  port: :8080
+
+redis:
+  host: localhost
+  port: 6379
+  cachetime: 3600
+
+ninjas:
+  definitionurl: https://api-ninjas.com/api/dictionary
+  defAPIKey: 123456789
+  wordgeneratorurl: https://api-ninjas.com/api/randomword
+  randwordAPIKey: 987654321
