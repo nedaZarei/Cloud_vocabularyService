@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: vocab:v1.1
+    image: vocab:v1.4
     depends_on:
       - redis
     ports:

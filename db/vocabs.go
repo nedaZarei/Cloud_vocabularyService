@@ -30,8 +30,6 @@ func (v *vocabDBimpl) GetVocab(ctx context.Context, key string) (string, error) 
 
 func InitRedisClient(host, port string) *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     host + ":" + port,
-		Password: "",
-		DB:       0,
+		Addr: host + ":" + port,
 	})
 }

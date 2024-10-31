@@ -26,7 +26,9 @@ type Service struct {
 func NewService(cfg *config.Config) *Service {
 	// Create an HTTP client that skips TLS verification
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+		MaxIdleConns:        20,
+		MaxIdleConnsPerHost: 20,
 	}
 	client := &http.Client{Transport: tr}
 	return &Service{
@@ -51,7 +53,7 @@ func (s *Service) StartService() error {
 	v1.GET("/dictionary", s.dictionary)
 	v1.GET("/randomword", s.randomword)
 
-	if err := s.e.Start("localhost" + s.cfg.Server.Port); err != nil {
+	if err := s.e.Start(s.cfg.Server.Port); err != nil {
 		return fmt.Errorf("failed to start server: %v", err)
 	}
 

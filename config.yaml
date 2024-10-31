@@ -2,9 +2,9 @@ server:
   port: :8080
 
 redis:
-  host: localhost
+  host: redis
   port: 6379
-  cachetime: 3600
+  cachetime: 300
 
 ninjas:
   definitionurl: https://api.api-ninjas.com/v1/dictionary
