@@ -3,13 +3,13 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o englishpinglish
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o vocab
 
 FROM scratch
-COPY --from=builder /app/englishpinglish /app/englishpinglish
+COPY --from=builder /app/vocab /app/vocab
 
 COPY --from=builder /app/config.yml /app/config.yml
 
 EXPOSE 8080
 
-ENTRYPOINT ["/app/englishpinglish"]
+ENTRYPOINT ["/app/vocab"]

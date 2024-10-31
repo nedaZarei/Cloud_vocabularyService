@@ -8,22 +8,22 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - app-network
+      - my-network
 
   redis:
     image: redis:latest
     volumes:
-      - redis_data:/data
+      - data:/data
     ports:
       - "6379:6379"
     command: ["redis-server", "--appendonly", "yes"]
     networks:
-      - app-network
+      - my-network
 
 volumes:
-  redis_data:
+  data:
     driver: local
 
 networks:
-  app-network:
+  my-network:
     driver: bridge
