@@ -19,6 +19,17 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     networks:
       - my-network
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - my-network
+    depends_on:
+      - app
+      - redis
 
 volumes:
   data:
