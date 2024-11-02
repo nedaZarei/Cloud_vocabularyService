@@ -18,6 +18,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// This is a change
+
 type Service struct {
 	cfg           *config.Config
 	vocabDB       db.VocabDB
