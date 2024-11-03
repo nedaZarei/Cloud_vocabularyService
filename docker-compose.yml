@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ndawz/vocab:1730529706
+    image: ndawz/vocab:1730645520
     depends_on:
       - redis
     ports:
