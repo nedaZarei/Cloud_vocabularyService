@@ -28,17 +28,18 @@ type Service struct {
 	totalRequests *prometheus.CounterVec
 	redisHits     *prometheus.CounterVec
 	errors        *prometheus.CounterVec
+	successReq    *prometheus.CounterVec
 	latency       *prometheus.HistogramVec
 }
 
 func NewService(cfg *config.Config) *Service {
-	// Create an HTTP client that skips TLS verification
+	//HTTP client that skips TLS verification
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
 
-	// Define Prometheus metrics
+	//prometheus metrics
 	totalRequests := prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "api_total_requests",
@@ -63,11 +64,19 @@ func NewService(cfg *config.Config) *Service {
 		[]string{"endpoint"},
 	)
 
+	successReq := prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "api_successful",
+			Help: "Number of successful responses",
+		},
+		[]string{"endpoint"},
+	)
+
 	latency := prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Name:    "api_request_duration",
 			Help:    "Histogram of request duration for each API endpoint in seconds",
-			Buckets: prometheus.DefBuckets, // Default buckets for latency
+			Buckets: prometheus.DefBuckets,
 		},
 		[]string{"endpoint"},
 	)
@@ -76,6 +85,7 @@ func NewService(cfg *config.Config) *Service {
 	prometheus.MustRegister(redisHits)
 	prometheus.MustRegister(errors)
 	prometheus.MustRegister(latency)
+	prometheus.MustRegister(successReq)
 
 	return &Service{
 		e:             echo.New(),
@@ -84,6 +94,7 @@ func NewService(cfg *config.Config) *Service {
 		totalRequests: totalRequests,
 		redisHits:     redisHits,
 		errors:        errors,
+		successReq:    successReq,
 		latency:       latency,
 	}
 }
@@ -98,6 +109,7 @@ func (s *Service) StartService() error {
 
 	s.e.Use(middleware.Logger())
 	s.e.Use(middleware.Recover())
+	//new enddpoint for prometheus
 	s.e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
 	v1 := s.e.Group("/api/v1")
@@ -115,7 +127,7 @@ func (s *Service) dictionary(c echo.Context) error {
 	start := time.Now()
 	defer func() {
 		duration := time.Since(start).Seconds()
-		s.latency.WithLabelValues("/dictionary").Observe(duration) // Record latency
+		s.latency.WithLabelValues("/dictionary").Observe(duration) //record latency
 		s.totalRequests.WithLabelValues("/dictionary").Inc()
 	}()
 
@@ -132,9 +144,11 @@ func (s *Service) dictionary(c echo.Context) error {
 			s.errors.WithLabelValues("/dictionary").Inc()
 			return c.String(http.StatusInternalServerError, err.Error())
 		}
+		s.successReq.WithLabelValues("/dictionary").Inc()
 		return c.String(http.StatusOK, "NINJA: "+meaning)
 	}
 	s.redisHits.WithLabelValues("/dictionary").Inc()
+	s.successReq.WithLabelValues("/dictionary").Inc()
 	return c.String(http.StatusOK, "REDIS: "+meaning)
 }
 
@@ -181,9 +195,11 @@ func (s *Service) randomword(c echo.Context) error {
 			s.errors.WithLabelValues("/randomword").Inc()
 			return c.String(http.StatusInternalServerError, err.Error())
 		}
+		s.successReq.WithLabelValues("/randomword").Inc()
 		return c.String(http.StatusOK, wordResponse.Word[0]+" is the word "+"NINJA: "+meaning)
 	}
 	s.redisHits.WithLabelValues("/randomword").Inc()
+	s.successReq.WithLabelValues("/randomword").Inc()
 	return c.String(http.StatusOK, wordResponse.Word[0]+" is the word "+"REDIS: "+meaning)
 }
 
