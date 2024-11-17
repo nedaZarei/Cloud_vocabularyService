@@ -42,7 +42,7 @@ func InitConfig(filename string) (*Config, error) {
 		return nil, err
 	}
 
-	// Set DefAPIKey from the environment variable
+	//setting DefAPIKey from the environment variable
 	if apiKey := os.Getenv("DEF_API_KEY"); apiKey != "" {
 		cfg.Ninjas.DefAPIKey = apiKey
 	}

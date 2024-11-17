@@ -14,15 +14,15 @@ spec:
     spec:
       containers:
         - name: vocab-container
-          image: ndawz/vocab:v1.4 
+          image: ndawz/vocab:1731827087
           imagePullPolicy: IfNotPresent
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "100m"
-            limits:
               memory: "128Mi"
-              cpu: "200m"
+              cpu: "300m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml
