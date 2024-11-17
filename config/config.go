@@ -1,6 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"os"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	Server Server `yaml:"server"`
@@ -32,9 +36,16 @@ func InitConfig(filename string) (*Config, error) {
 	if err := v.ReadInConfig(); err != nil {
 		return nil, err
 	}
+
 	cfg := &Config{}
 	if err := v.Unmarshal(cfg); err != nil {
 		return nil, err
 	}
+
+	// Set DefAPIKey from the environment variable
+	if apiKey := os.Getenv("DEF_API_KEY"); apiKey != "" {
+		cfg.Ninjas.DefAPIKey = apiKey
+	}
+
 	return cfg, nil
 }

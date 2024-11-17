@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vocab-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vocab-app
+  template:
+    metadata:
+      labels:
+        app: vocab-app
+    spec:
+      containers:
+        - name: vocab-container
+          image: ndawz/vocab:v1.4 
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          env:
+            - name: DEF_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: defAPIKey
+
+      volumes:
+        - name: config
+          configMap:
+            name: my-configmap

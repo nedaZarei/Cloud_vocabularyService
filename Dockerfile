@@ -8,8 +8,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o vocab
 FROM scratch
 COPY --from=builder /app/vocab /app/vocab
 
-COPY --from=builder /app/config.yaml /app/config.yaml
-
 EXPOSE 8080
 
 ENTRYPOINT ["/app/vocab"]
